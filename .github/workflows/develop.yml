@@ -1,0 +1,76 @@
+name: Deploy Laravel to Hpanel
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Hpanel
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd /home/u723134020/domains/apis.ahmakbar.site
+            git clone https://github.com/ahmakbardev/umkm_api.git
+            cd /home/u723134020/domains/apis.ahmakbar.site
+            
+            # Pastikan Node.js dan npm tersedia
+            if ! command -v node &> /dev/null; then
+              echo "Node.js tidak ditemukan, menginstall..."
+              curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+              sudo apt-get install -y nodejs
+            fi
+            
+            echo "Cek versi Node.js dan NPM"
+            node -v
+            npm -v
+            
+            # Pastikan menggunakan Composer 2
+            if [[ $(composer --version) =~ "1." ]]; then
+              echo "Upgrading Composer to v2..."
+              mkdir -p $HOME/bin
+              curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
+              echo "export PATH=$HOME/bin:$PATH" >> ~/.bash_profile
+              source ~/.bash_profile
+            fi
+            
+            # Git clone atau pull repository
+            if [ -d "umkm_api" ]; then
+              cd umkm_api
+              git pull origin develop
+            else
+              git clone https://github.com/ahmakbardev/umkm_api.git
+              cd umkm_api
+            fi
+            
+            # Install dependencies
+            composer install --no-dev --optimize-autoloader
+            npm install --legacy-peer-deps
+            npm run prod
+            
+            # Laravel setup
+            php artisan key:generate
+            php artisan route:clear
+            php artisan config:cache
+            php artisan storage:link || echo "Storage link gagal, cek manual"
+            php artisan optimize
+            
+            # Set permissions
+            find storage -type d -exec chmod 755 {} \;
+            find storage -type f -exec chmod 644 {} \;
+            
+            # Update symbolic link
+            ln -sfn /home/u723134020/domains/apis.ahmakbar.site/umkm_api/public/* /home/u723134020/domains/apis.ahmakbar.site/public_html/
+          
+                      
