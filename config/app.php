@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
+
 return [
 
     /*
@@ -185,7 +186,9 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
+    'frontend_url' => env('FRONTEND_URL', 'https://seller-umkmmu.vercel.app'),
+    // 'frontend_seller_url' => env('FRONTEND_SELLER_URL', 'http://localhost:3000/seller'),
+
 
 
 ];
