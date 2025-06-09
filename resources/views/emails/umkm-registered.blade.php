@@ -126,14 +126,13 @@
                     <th>Tanggal Registrasi</th>
                     <td>{{ \Carbon\Carbon::parse($umkm->created_at)->translatedFormat('d F Y') }}</td>
                 </tr>
-                <tr>
-                    <th>Waktu</th>
-                    <td>{{ \Carbon\Carbon::parse($umkm->created_at)->format('H:i') }} WIB</td>
-                </tr>
-                <tr>
-                    <th>Reference ID</th>
+               <tr>
+    <th>Waktu</th>
+    <td>{{ \Carbon\Carbon::parse($umkm->created_at)->timezone('Asia/Jakarta')->format('H:i') }} WIB</td>
+</tr>
+                    <!-- <th>Reference ID</th>
                     <td>{{ $umkm->id }}</td>
-                </tr>
+                </tr> -->
             </table>
         </div>
 
