@@ -1,6 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# ===== Dependencies =====
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +8,45 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# ===== Testing =====
 /coverage
+/phpunit.cache
+.phpunit.result.cache
 
-# next.js
+# ===== Next.js =====
 /.next/
 /out/
+next-env.d.ts
 
-# production
-/build
+# ===== Laravel =====
+/vendor
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+Homestead.json
+Homestead.yaml
 
-# misc
-.DS_Store
-*.pem
+# ===== Env Files =====
+.env*
+.env.backup
+.env.production
 
-# debug
+# ===== Vercel =====
+.vercel
+
+# ===== Debug Logs =====
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# ===== Misc IDE Configs =====
+.DS_Store
+.auth.json
+/.fleet
+/.idea
+/.vscode
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ===== Build =====
+/build
